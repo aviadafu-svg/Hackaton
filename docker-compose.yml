@@ -18,9 +18,7 @@ services:
       retries: 5
 
   app:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: xvirr/biblioteca-app:latest
     container_name: biblioteca-app
     restart: always
     depends_on:
