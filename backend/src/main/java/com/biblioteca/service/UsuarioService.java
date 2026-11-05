@@ -176,6 +176,14 @@ public class UsuarioService {
     }
 
     /**
+     * Obtener usuarios filtrando por rol y estado simultáneamente
+     */
+    @Transactional(readOnly = true)
+    public List<Usuario> obtenerPorRolYActivo(String rol, Boolean activo) {
+        return usuarioRepository.findByRolAndActivo(rol.toUpperCase(), activo);
+    }
+
+    /**
      * Suspender o reactivar membresía (útil para sanciones por retraso de devolución)
      */
     @Transactional

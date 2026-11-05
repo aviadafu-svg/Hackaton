@@ -68,25 +68,35 @@ public class UsuarioController {
     }
 
     // ========================================================================
-    // 1. LISTAR TODOS LOS USUARIOS
+    // 1. LISTAR USUARIOS (Con soporte para filtros opcionales de rol y estado)
     // ========================================================================
     /**
      * Endpoint: GET /api/usuarios
      * 
-     * ¿CÓMO FUNCIONA?
-     *   - @GetMapping: Atiende peticiones HTTP de tipo GET a la ruta base "/api/usuarios".
-     *   - ResponseEntity<List<Usuario>>: Envuelve la lista en una respuesta HTTP completa.
-     *   - ResponseEntity.ok(usuarios): Devuelve código de estado 200 OK y coloca la lista
-     *     en el cuerpo de la respuesta en formato JSON.
+     * Admite query params opcionales para facilitar la vida al Frontend:
+     *   - GET /api/usuarios                  (Devuelve todos)
+     *   - GET /api/usuarios?rol=ALUMNO       (Solo alumnos)
+     *   - GET /api/usuarios?rol=PROFESOR     (Solo profesores)
+     *   - GET /api/usuarios?activo=true      (Solo habilitados para préstamos)
+     *   - GET /api/usuarios?rol=ALUMNO&activo=true
      * 
      * RESPUESTA HTTP:
      *   Status: 200 OK
-     *   Body: [ { "id": 1, "nombre": "Juan", "email": "juan@colegio.es", ... } ]
+     *   Body: [ { "id": 1, "nombre": "Sergi", "rol": "ALUMNO", "activo": true, ... } ]
      */
     @GetMapping
-    public ResponseEntity<List<Usuario>> listarTodos() {
-        List<Usuario> usuarios = usuarioService.obtenerTodos();
-        return ResponseEntity.ok(usuarios);
+    public ResponseEntity<List<Usuario>> listarTodos(
+            @RequestParam(required = false) String rol,
+            @RequestParam(required = false) Boolean activo) {
+        
+        if (rol != null && activo != null) {
+            return ResponseEntity.ok(usuarioService.obtenerPorRolYActivo(rol, activo));
+        } else if (rol != null) {
+            return ResponseEntity.ok(usuarioService.obtenerPorRol(rol));
+        } else if (activo != null && activo) {
+            return ResponseEntity.ok(usuarioService.obtenerActivos());
+        }
+        return ResponseEntity.ok(usuarioService.obtenerTodos());
     }
 
     // ========================================================================
@@ -186,5 +196,28 @@ public class UsuarioController {
     public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
         usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // ========================================================================
+    // 6. CAMBIAR ESTADO DE MEMBRESÍA (Activar o Suspender)
+    // ========================================================================
+    /**
+     * Endpoint: PATCH /api/usuarios/{id}/estado?activo=false
+     * Ejemplo: PATCH /api/usuarios/1/estado?activo=false
+     * 
+     * ¿CÓMO FUNCIONA?
+     *   - Permite que desde la UI de React se pueda suspender o rehabilitar a un
+     *     usuario con un solo botón/switch, sin necesidad de reenviar todo el JSON.
+     * 
+     * RESPUESTA HTTP:
+     *   Status: 200 OK
+     *   Body: Objeto Usuario con el nuevo valor en 'activo'.
+     */
+    @PatchMapping("/{id}/estado")
+    public ResponseEntity<Usuario> cambiarEstado(
+            @PathVariable Long id,
+            @RequestParam Boolean activo) {
+        Usuario usuario = usuarioService.cambiarEstado(id, activo);
+        return ResponseEntity.ok(usuario);
     }
 }
