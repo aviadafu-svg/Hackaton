@@ -3,6 +3,8 @@
 
 Proyecto desarrollado para el **AI-Powered Full-Stack Hackathon**, enfocado en la construcción, integración y despliegue ágil de una solución integral para la gestión de bibliotecas escolares asistido por herramientas avanzadas de Inteligencia Artificial.
 
+![Dashboard Principal](docs/images/01_dashboard.png)
+
 ---
 
 ## 👥 Estructura del Equipo y División del Trabajo
@@ -33,11 +35,15 @@ Cumpliendo con los tres pilares del enunciado oficial:
 * Control dinámico de inventario: distinción entre `totalCopias` y `copiasDisponibles`.
 * Categorización escolar (Literatura Clásica, Fantasía, Ciencia Ficción, Historia, Matemáticas, etc.) y localización física por estanterías.
 
+![Catálogo de Libros](docs/images/02_catalogo_libros.png)
+
 ### 2. 👨‍🎓 Gestión de Usuarios Escolares (CRUD Usuarios)
 * Censo unificado de la comunidad educativa: **Alumnos** y **Profesores**.
 * Registro de matrícula escolar (`matricula`), curso/departamento y datos de contacto.
 * Control de estados de membresía: `Activo`, `Inactivo` y `Sancionado`.
 * Validación contra duplicación de correos electrónicos y matrículas.
+
+![Gestión de Usuarios Escolares](docs/images/03_usuarios_escolares.png)
 
 ### 3. 🔄 Flujo de Préstamo & Devolución Activa
 * **Asignación transaccional:** Cada nuevo préstamo decrementa automáticamente en 1 las copias disponibles del libro.
@@ -47,6 +53,8 @@ Cumpliendo con los tres pilares del enunciado oficial:
   * Profesores: plazo de devolución ampliado de **30 días**.
 * **Detección automática de demoras:** Alertas de estado *A Tiempo* vs *Retrasado* en base a la fecha límite.
 * **Devolución inmediata:** La acción de retorno (`PUT /api/loans/{id}/return`) actualiza el estado a `Devuelto`, registra la fecha efectiva de devolución y repone inmediatamente el stock en el catálogo.
+
+![Préstamos y Devoluciones](docs/images/04_prestamos_historial.png)
 
 ---
 
@@ -152,6 +160,8 @@ PORT=8080
 ## 📡 Endpoints de la API REST
 
 La API cuenta con compatibilidad dual en inglés y español para facilitar cualquier integración:
+
+![Swagger UI OpenAPI](docs/images/05_swagger_ui.png)
 
 ### 📚 Libros (`/api/books` o `/api/libros`)
 * `GET /api/books` - Obtener catálogo completo de libros.
