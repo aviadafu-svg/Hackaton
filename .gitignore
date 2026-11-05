@@ -1,0 +1,23 @@
+# Environment variables & local secrets
+.env
+.env.*
+*.env
+application-local.properties
+application-secret.properties
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+
+# Build outputs
+target/
+build/
+node_modules/
+dist/
