@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
  * ENTIDAD DE DOMINIO: Usuario
  * ============================================================================
  * 
- * Representa la tabla "usuarios" en la base de datos (H2 / SQLite).
+ * Representa la tabla "usuarios" en la base de datos PostgreSQL.
  * Mapea tanto a Alumnos como a Profesores del centro escolar.
  */
 
@@ -29,6 +29,9 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 30)
+    private String matricula;
+
     @NotBlank(message = "El nombre es obligatorio")
     @Column(nullable = false, length = 100)
     private String nombre;
@@ -38,9 +41,19 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @NotBlank(message = "El rol es obligatorio (ALUMNO o PROFESOR)")
+    @NotBlank(message = "El rol es obligatorio (Alumno o Profesor)")
     @Column(nullable = false, length = 20)
     private String rol;
+
+    @Column(length = 50)
+    private String curso;
+
+    @Column(length = 20)
+    private String telefono;
+
+    @Column(length = 20)
+    @Builder.Default
+    private String estado = "Activo";
 
     @Column(nullable = false)
     @Builder.Default
@@ -51,48 +64,8 @@ public class Usuario {
         if (this.activo == null) {
             this.activo = true;
         }
-    }
-
-    // ========================================================================
-    // GETTERS Y SETTERS EXPLÍCITOS (Garantiza compilación sin depender de plugins de IDE)
-    // ========================================================================
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-
-    public Boolean getActivo() {
-        return activo;
-    }
-
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
+        if (this.estado == null || this.estado.isBlank()) {
+            this.estado = "Activo";
+        }
     }
 }
