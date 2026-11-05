@@ -1,7 +1,8 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 COPY . .
-RUN ./mvnw clean package -DskipTests
+# Fix Windows CRLF line endings and grant execute permissions
+RUN sed -i 's/\r$//' ./mvnw && chmod +x ./mvnw && ./mvnw clean package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
